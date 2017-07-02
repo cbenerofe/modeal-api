@@ -1,0 +1,35 @@
+{
+  "name": "deal",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "seller": {
+      "type": "string"
+    },
+    "listing_date": {
+      "type": "date"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "buildings": {
+      "type": "hasMany",
+      "model": "building",
+      "foreignKey": ""
+    },
+    "scenarios": {
+      "type": "hasMany",
+      "model": "scenario",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

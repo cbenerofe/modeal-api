@@ -1,0 +1,57 @@
+{
+  "name": "scenario",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "extensions": {
+      "type": "object"
+    },
+    "down_months": {
+      "type": "number",
+      "required": true
+    },
+    "new_lease": {
+      "type": "object",
+      "required": true
+    },
+    "capex": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {
+    "getNewLeases": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "returns": [
+        {
+          "arg": "leases",
+          "type": "array",
+          "root": false,
+          "description": ""
+        }
+      ],
+      "description": "Get new leases created during the scenario hold period",
+      "http": [
+        {
+          "path": "/:id/newLeases",
+          "verb": "get"
+        }
+      ]
+    }
+  }
+}

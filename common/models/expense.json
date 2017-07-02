@@ -1,0 +1,27 @@
+{
+  "name": "expense",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "chargeback": {
+      "type": "string"
+    },
+    "actuals": {
+      "type": "object"
+    },
+    "estimates": {
+      "type": "object"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

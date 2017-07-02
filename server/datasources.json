@@ -1,0 +1,13 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "mongolab": {
+    "url": "mongodb://craig:1buddah2@ds159497.mlab.com:59497/heroku_tj9882wj",
+    "password": "1buddah2",
+    "name": "mongolab",
+    "connector": "loopback-connector-mongodb",
+    "user": "craig"
+  }
+}

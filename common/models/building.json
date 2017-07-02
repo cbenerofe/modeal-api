@@ -1,0 +1,41 @@
+{
+  "name": "building",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "street_address": {
+      "type": "string",
+      "required": true
+    },
+    "zipcode": {
+      "type": "string"
+    },
+    "use": {
+      "type": "string"
+    },
+    "sqft": {
+      "type": "number"
+    },
+    "floor": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "leases": {
+      "type": "hasMany",
+      "model": "lease",
+      "foreignKey": ""
+    },
+    "expenses": {
+      "type": "hasMany",
+      "model": "expense",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

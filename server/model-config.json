@@ -1,0 +1,55 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "db"
+  },
+  "AccessToken": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "db",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "building": {
+    "dataSource": "mongolab",
+    "public": true
+  },
+  "deal": {
+    "dataSource": "mongolab",
+    "public": true
+  },
+  "expense": {
+    "dataSource": "mongolab",
+    "public": true
+  },
+  "lease": {
+    "dataSource": "mongolab",
+    "public": true
+  },
+  "scenario": {
+    "dataSource": "mongolab",
+    "public": true
+  }
+}

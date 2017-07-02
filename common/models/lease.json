@@ -1,0 +1,22 @@
+{
+  "name": "lease",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "tenant": {
+      "type": "string",
+      "required": true
+    },
+    "space": {
+      "type": "object",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
