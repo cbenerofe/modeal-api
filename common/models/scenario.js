@@ -11,53 +11,71 @@ module.exports = function(Scenario) {
     
     Scenario.findById(id, {},function(err, scenario) { 
       
+      if (err) {
+        cb(err)
+        return
+      }
+      
+      if (scenario == null) {
+        cb(err)
+        return
+      }
+            
       // get the deal, then the buildings
       Scenario.app.models.Deal.findById(scenario.dealId, 
         { include:  "buildings"  }, 
            function(err,deal) {
+             
+             if (err) {
+               cb(err)
+               return
+             }
+             
              var all_leases = []
              deal.buildings({ include: "leases" },function(err,buildings) {
-               bcount = 0
-               buildings.forEach(function(b, bIndex) {
-                 bcount++
-                 lcount = 0
-                 b.leases({},function(err,leases) {
-                   leases.forEach(function(l, lIndex) {
-                     all_leases.push(l)
-                     const bDone = bIndex >= buildings.length - 1;
-                     const lDone = lIndex >= leases.length - 1;
-                     if (bDone && lDone ) {
-                         doit(all_leases);
-                     }
-                   })
-                 })  
-               })
-             }) 
+                 
+                if (err) {
+                  cb(err)
+                  return
+                }
+                
+                buildings.forEach(function(b,bIndex) {
+                                     
+                  buildings[bIndex].leases({},function(err,leases) {
+                                          
+                    leases.forEach(function(l,lIndex) {
+                         all_leases.push(leases[lIndex]) 
+                    })
+                    if (bIndex == buildings.length -1) {
+                      
+                      new_leases = []
 
-        doit = function(leases) {
-          
-            new_leases = []
-
-            expirations = get_lease_expirations(leases, scenario)
-            expirations.forEach(function(e) {
-              l = create_new_lease(e,scenario)   
-              new_leases.push(l)
-            })
-
+                      expirations = get_lease_expirations(leases, scenario)
+                      expirations.forEach(function(e) {
+                        l = create_new_lease(e,scenario)   
+                        new_leases.push(l)
+                      })
             
-            new_expirations = get_lease_expirations(new_leases,scenario)
-            new_expirations.forEach(function(ne) {
-              l = create_new_lease(ne,scenario,2)
-              new_leases.push(l) 
-            })  
+                      new_expirations = get_lease_expirations(new_leases,scenario)
+                      new_expirations.forEach(function(ne) {
+                        l = create_new_lease(ne,scenario,2)
+                        new_leases.push(l) 
+                      })  
             
-            
-            //return new_leases    
-            cb(null,new_leases);
-        }
+                      //return new_leases   
+                      cb(null,new_leases);
+                      
+                      return
+                    }
+                    
+                  })  
+                 
+                })
+               
+             })
+             
+          }) 
         
-      })
-      
     });
     
   }
