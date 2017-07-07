@@ -49,17 +49,23 @@ module.exports = function(Scenario) {
                     if (bIndex == buildings.length -1) {
                       
                       new_leases = []
-
+                      scenario_end = new Date("2024-08-31")
                       expirations = get_lease_expirations(leases, scenario)
                       expirations.forEach(function(e) {
-                        l = create_new_lease(e,scenario)   
-                        new_leases.push(l)
+                        start_date = new Date(e.available)
+                        if (start_date < scenario_end) {
+                          l = create_new_lease(e,scenario)   
+                          new_leases.push(l)
+                        }
                       })
             
                       new_expirations = get_lease_expirations(new_leases,scenario)
                       new_expirations.forEach(function(ne) {
-                        l = create_new_lease(ne,scenario,2)
-                        new_leases.push(l) 
+                        start_date = new Date(ne.available)
+                        if (start_date < scenario_end) {
+                          l = create_new_lease(ne,scenario,2)
+                          new_leases.push(l) 
+                        }
                       })  
             
                       //return new_leases   
