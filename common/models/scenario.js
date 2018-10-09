@@ -31,7 +31,7 @@ module.exports = function(Scenario) {
                return
              }
              
-             var all_leases = []
+             
              deal.buildings({ include: "leases" },function(err,buildings) {
                  
                 if (err) {
@@ -39,17 +39,26 @@ module.exports = function(Scenario) {
                   return
                 }
                 
+                var vacant_sqft = 0
+                
                 buildings.forEach(function(b,bIndex) {
                                      
                   buildings[bIndex].leases({},function(err,leases) {
-                                          
+                    
+                    scenario_start = new Date (2017,8,1)
+                    //calculate vacancies
+                    vacant_sqft = vacant_sqft + b.sqft
+                    
                     leases.forEach(function(l,lIndex) {
-                         all_leases.push(leases[lIndex]) 
+                      lease_sqft = leases[lIndex].space.sqft;
+                      vacant_sqft = vacant_sqft - lease_sqft
                     })
+                    
                     if (bIndex == buildings.length -1) {
                       
                       new_leases = []
-                      scenario_end = new Date("2024-08-31")
+                      
+                      scenario_end = new Date("2024-07-31")
                       expirations = get_lease_expirations(leases, scenario)
                       expirations.forEach(function(e) {
                         start_date = new Date(e.available)
@@ -59,6 +68,16 @@ module.exports = function(Scenario) {
                         }
                       })
             
+                      //console.log ("vacant sqft:" + vacant_sqft)
+                      vacancies = get_vacant_spaces(vacant_sqft,scenario)
+                      vacancies.forEach(function(v) {
+                        start_date = new Date(v.available)
+                        l = create_new_lease(v,scenario)
+                        //console.log(l)
+                        new_leases.push(l) 
+                      }) 
+                      
+                      
                       new_expirations = get_lease_expirations(new_leases,scenario)
                       new_expirations.forEach(function(ne) {
                         start_date = new Date(ne.available)
@@ -67,7 +86,8 @@ module.exports = function(Scenario) {
                           new_leases.push(l) 
                         }
                       })  
-            
+                      
+                      
                       //return new_leases   
                       cb(null,new_leases);
                       
@@ -92,12 +112,44 @@ module.exports = function(Scenario) {
   });
 
 
+
+  get_vacant_spaces = function(vacant_sqft, scenario) {
+    // asumes start at secario start
+    // divide vacant square feet by scenario unit_size
+    // create a expiration for each of those
+    // and one for the remainder
+    
+    vacancies = []
+    unit_size = 50000
+    index = 0
+    while(vacant_sqft > 0) {
+     // if (vacant_sqft > unit_size) {
+        e = {}
+        e.space_id = "vacant_" + index
+        e.sqft = unit_size
+        e.pro_rata = Math.round(e.sqft / 628000 *100) / 100
+        //e.available = scenario_start
+        e.available = new Date (2017,8,1)
+        vacancies.push(e)
+        vacant_sqft = vacant_sqft - unit_size
+        index++
+   //   }
+      
+    }
+    return vacancies
+  
+  }
+
   get_lease_expirations = function(leases, scenario) {
     
     // loop all leases, find any that expire in range
     // without extension, specify the space and date
+    if (leases == undefined ) {
+      return []
+    }
     
     expirations = []
+    
     leases.forEach(function(l) {
       count = 0
 
@@ -179,6 +231,7 @@ module.exports = function(Scenario) {
     return l
   }
 
+
   get_lease_expiration = function(space,scenario) {
     var expiring_period = undefined
     if (space == undefined) {
@@ -202,7 +255,7 @@ module.exports = function(Scenario) {
         }
       })
           
-      if (space.extensions != undefined) {
+      if (space.extensions != undefined && scenario.extensions != undefined) {
         scenario.extensions.forEach(function(se) {  
           if (se.space_id == space.id) {
             //console.log(se)

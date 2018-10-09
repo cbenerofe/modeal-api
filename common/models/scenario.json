@@ -23,6 +23,12 @@
     },
     "capex": {
       "type": "number"
+    },
+    "purchase_price": {
+      "type": "number"
+    },
+    "exit_cap": {
+      "type": "number"
     }
   },
   "validations": [],
